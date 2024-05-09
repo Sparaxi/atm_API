@@ -1,4 +1,4 @@
-package model;
+package com.atm.api.model;
 
 
 import jakarta.persistence.Entity;
