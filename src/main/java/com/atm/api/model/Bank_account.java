@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 @Table(name = "bank_account")
 public class Bank_account {
         @Id
-        private Integer rekening_nummer;
+        private Integer id;
 
         @Column(name = "pasnummer", nullable = false)
         private String pasnummer;
@@ -23,6 +23,9 @@ public class Bank_account {
         @JoinColumn(name = "user_bsn")
         private User user;
 
+        public Bank_account() {
+        }
+
         public Bank_account(String pasnummer, Integer pincode, BigDecimal balance, User user) {
                 this.pasnummer = pasnummer;
                 this.pincode = pincode;
@@ -30,12 +33,12 @@ public class Bank_account {
                 this.user = user;
         }
 
-        public Integer getRekening_nummer() {
-                return rekening_nummer;
+        public Integer getId() {
+                return id;
         }
 
-        public void setRekening_nummer(Integer rekening_nummer) {
-                this.rekening_nummer = rekening_nummer;
+        public void setId(Integer id) {
+                this.id = id;
         }
 
         public String getPasnummer() {
@@ -73,7 +76,7 @@ public class Bank_account {
         @Override
         public String toString() {
                 return "Bank_account{" +
-                        "rekening_nummer=" + rekening_nummer +
+                        "id=" + id +
                         ", pasnummer='" + pasnummer + '\'' +
                         ", pincode=" + pincode +
                         ", balance=" + balance +
@@ -81,5 +84,6 @@ public class Bank_account {
                         '}';
         }
 }
+
 
 
