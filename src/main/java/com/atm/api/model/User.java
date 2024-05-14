@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long bsn;
+    private Integer bsn;
 
     @Column(name = "firstname", nullable = false)
     private String firstname;
@@ -15,6 +15,44 @@ public class User {
     @Column(name = "lastname", nullable = false)
     private String lastname;
 
-    @Column(name = "token", nullable = false)
-    private String token;
+    public User() {
+    }
+
+    public User(String firstname, String lastname) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+    }
+
+    public Integer getBsn() {
+        return bsn;
+    }
+
+    public void setBsn(Integer bsn) {
+        this.bsn = bsn;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "bsn=" + bsn +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                '}';
+    }
 }
