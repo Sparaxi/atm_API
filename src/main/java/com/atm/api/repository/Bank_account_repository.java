@@ -14,5 +14,4 @@ public interface Bank_account_repository extends JpaRepository<Bank_account, Int
 
 
 
-
 }
