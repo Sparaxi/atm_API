@@ -4,6 +4,9 @@ import com.atm.api.model.Bank_account;
 import com.atm.api.repository.Bank_account_repository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,19 +27,36 @@ public class BankAccountService {
         return bankAccount.map(Bank_account::getBalance).orElse(null);
     }
 
+
+
     @Transactional
-    public boolean deductAmount(String pasnummer, BigDecimal amount){
+    public void deductAmount(String pasnummer, BigDecimal amount) throws InsufficientFundsException, AccountNotFoundException {
         Optional<Bank_account> optionalAccount = bankAccountRepository.findByPasnummer(pasnummer);
         if (optionalAccount.isPresent()) {
-            Bank_account account = optionalAccount.get(); // Correctly retrieve the Bank_account instance
-            BigDecimal currentBalance = account.getBalance(); // Now you can call getBalance()
-            if(currentBalance.compareTo(amount) >= 0 ){
+            Bank_account account = optionalAccount.get();
+            BigDecimal currentBalance = account.getBalance();
+            if (currentBalance.compareTo(amount) >= 0) {
                 BigDecimal newBalance = currentBalance.subtract(amount);
                 account.setBalance(newBalance);
                 bankAccountRepository.save(account);
-                return true; // Success, amount deducted
+            } else {
+                throw new InsufficientFundsException("Not enough balance");
             }
+        } else {
+            throw new AccountNotFoundException("Account not found");
         }
-        return false; // Failure, amount not deducted due to insufficient funds or account not found
+    }
+
+    // Custom exceptions
+    public static class InsufficientFundsException extends Exception {
+        public InsufficientFundsException(String message) {
+            super(message);
+        }
+    }
+
+    public static class AccountNotFoundException extends Exception {
+        public AccountNotFoundException(String message) {
+            super(message);
+        }
     }
 }

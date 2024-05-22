@@ -5,6 +5,8 @@ import com.atm.api.model.Bank_account;
 import com.atm.api.service.BankAccountService;
 import com.atm.api.DTO.BalanceDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -29,7 +31,16 @@ public class BankAccountController {
     }
 
     @PostMapping("/deduct/{pasnummer}")
-    public boolean deductFromAccount(@PathVariable String pasnummer, @RequestBody AmountDTO amountDTO) {
-        return bankAccountService.deductAmount(pasnummer, amountDTO.getAmount());
+    public ResponseEntity<String> deductFromAccount(@PathVariable String pasnummer, @RequestBody AmountDTO amountDTO) {
+        try {
+            bankAccountService.deductAmount(pasnummer, amountDTO.getAmount());
+            return new ResponseEntity<>("Amount deducted successfully", HttpStatus.OK);
+        } catch (BankAccountService.InsufficientFundsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (BankAccountService.AccountNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
